@@ -51,7 +51,7 @@ def CalculaLMS(neuronio,entradas,saidasEsperadas):
 
 def executeAlgoritmo(neuronio, entradas, saidas):
     epocas = 1
-    epsilon = 0.000001
+    epsilon = 0.0000001
     
     while True:
         erroAnterior = CalculaLMS(neuronio, entradas, saidas)
@@ -73,7 +73,7 @@ def executeAlgoritmo(neuronio, entradas, saidas):
     
     for i in range(0, len(entradas)):
         saida = neuronio.PropagaResposta(entradas[i])
-        print ("Entrada ",(i+1),":",entradas[i]," Saída ",(i+1),":",saida+1," Saída esperada:",saidas[i]+1)
+        print ("Entrada ",(i+1),":",entradas[i]," Saída ",(i+1),":",saida," Saída esperada:",saidas[i])
 
 
 neuronioAdaline = Adaline(2,1)
