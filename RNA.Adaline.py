@@ -11,7 +11,7 @@ class Adaline:
         self.IniciaPesos()
 
     def IniciaPesos(self):
-        for i in range(len(self.Pesos)):
+        for i in range(0, len(self.Pesos)):
             self.Pesos[i] = r.random()
 
     def CalcularPotenciais(self):
@@ -19,12 +19,12 @@ class Adaline:
         for i in range(0, len(self.Entradas)):
             self.PotencialDeAtivacao += self.Entradas[i] * self.Pesos[i]
     
+    def FuncaoDeAtivacao(self):
+        return np.tanh(self.PotencialDeAtivacao)
+
     def CalcularSaidas(self):
         for i in range(0, len(self.Saidas)):
             self.Saidas[i] = self.FuncaoDeAtivacao()
-
-    def FuncaoDeAtivacao(self):
-        return np.tanh(self.PotencialDeAtivacao)
 
     def PropagaResposta(self, vetorEntradas):
         self.Entradas[1:] = vetorEntradas
@@ -33,45 +33,47 @@ class Adaline:
         return self.Saidas
 
     def AjusteDePesos(self, vetorSaidasEsperadas):
-        erroAcumulado = 0
         for i in range(0, len(self.Saidas)):
-            erro = vetorSaidasEsperadas[i] - self.Saidas[i]
             for j in range(0, len(self.Pesos)):
-                self.Pesos[j] += self.TaxaDeAprendizado * erro * self.Entradas[j]
-            erroAcumulado += (erro**2)
-        return erroAcumulado/len(self.Entradas)
+                self.Pesos[j] += self.TaxaDeAprendizado * (vetorSaidasEsperadas[i] - self.Saidas[i]) * self.Entradas[j]
 
-def CalculaLMS(neuronio,entradas,saidas):
+
+
+
+
+def CalculaLMS(neuronio,entradas,saidasEsperadas):
     erroAcumulado = 0
-    for i in range(1, len(entradas)):
+    for i in range(0, len(saidasEsperadas)):
         saida = neuronio.PropagaResposta(entradas[i])
-        print("Saída esperada: ", saidas[i]," Saída obtida: ", saida)
-        erroAcumulado += ((saidas[i] - saida)**2)
-    erroAcumulado -= 
-    print(np.abs(erroAcumulado))
-    return np.abs(erroAcumulado/len(saidas))
+        saida -= neuronio.Pesos[0]
+        erroAcumulado += ((saidasEsperadas[i] - saida)**2)
+    return erroAcumulado / len(saidasEsperadas)
 
 def executeAlgoritmo(neuronio, entradas, saidas):
     epocas = 1
     epsilon = 0.000001
-    erroAnterior = CalculaLMS(neuronio, entradas, saidas)
-    condicao = True
-    while condicao:
+    
+    while True:
+        erroAnterior = CalculaLMS(neuronio, entradas, saidas)
+        
         index = r.randint(0, len(entradas)-1)
         neuronio.PropagaResposta(entradas[index])
         neuronio.AjusteDePesos([saidas[index]])
-
-
+        
         erroAtual = CalculaLMS(neuronio, entradas, saidas)
+
         epocas += 1
         if np.abs(erroAtual - erroAnterior) < epsilon:
+            print("Épocas percorridas: ",epocas)
+            print("Bias: ",neuronio.Pesos[0])
+            print("Pesos: ",neuronio.Pesos[1:])
             break;
         else:
             erroAnterior = erroAtual        
     
     for i in range(0, len(entradas)):
         saida = neuronio.PropagaResposta(entradas[i])
-        print ("Entrada ",(i+1),":",entradas[i]," Saída ",(i+1),":",saida," Saída esperada:",saidas[i])
+        print ("Entrada ",(i+1),":",entradas[i]," Saída ",(i+1),":",saida+1," Saída esperada:",saidas[i]+1)
 
 
 neuronioAdaline = Adaline(2,1)
@@ -79,11 +81,11 @@ neuronioAdaline = Adaline(2,1)
 print("Porta OR")
 neuronioAdaline.IniciaPesos()
 entradas = [[0,0],[1,0],[0,1],[1,1]]
-saidas = [0,1,1,1]
+saidas = [-1,1,1,1]
 executeAlgoritmo(neuronioAdaline, entradas, saidas)
 
 print("Porta AND")
 neuronioAdaline.IniciaPesos()
 entradas = [[0,0],[1,0],[0,1],[1,1]]
-saidas = [0,0,0,1]
+saidas = [-1,-1,-1,1]
 executeAlgoritmo(neuronioAdaline, entradas, saidas)
