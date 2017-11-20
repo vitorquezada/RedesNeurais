@@ -45,7 +45,6 @@ def CalculaLMS(neuronio,entradas,saidasEsperadas):
     erroAcumulado = 0
     for i in range(0, len(saidasEsperadas)):
         saida = neuronio.PropagaResposta(entradas[i])
-        saida -= neuronio.Pesos[0]
         erroAcumulado += ((saidasEsperadas[i] - saida)**2)
     return erroAcumulado / len(saidasEsperadas)
 
