@@ -2,7 +2,6 @@ import numpy as np
 import random as r
 
 class Perceptron:
-    Bias = r.random()
     TaxaDeAprendizado = 1
     def __init__(self, numEntradas, numSaidas):
         self.Entradas = np.ones(numEntradas + 1)
