@@ -2,7 +2,6 @@ import numpy as np
 import random as r
 
 class Adaline:
-    Bias = r.random()
     def __init__(self, numEntradas, numSaidas, TaxaDeAprendizado = 1):
         self.Entradas = np.ones(numEntradas + 1)
         self.Saidas = np.zeros(numSaidas)
